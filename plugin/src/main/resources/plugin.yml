@@ -1,0 +1,18 @@
+main: com.artformgames.core.Main
+name: ArtCore
+
+version: ${project.version}
+description: ${project.description}
+website: ${project.url}
+
+authors:
+  - ArtformGames
+  - CarmJos
+
+api-version: 1.16
+
+depend:
+  - MineSQL
+
+softdepend:
+  - PlaceholderAPI

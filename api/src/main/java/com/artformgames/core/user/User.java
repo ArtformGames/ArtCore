@@ -1,0 +1,78 @@
+package com.artformgames.core.user;
+
+import com.artformgames.core.user.handler.UserHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
+
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
+
+public interface User extends Comparable<User> {
+
+    @NotNull UserKey getKey();
+
+    default long getID() {
+        return getKey().id();
+    }
+
+    default @NotNull UUID getUserUUID() {
+        return getKey().uuid();
+    }
+
+    default @NotNull String getUsername() {
+        return getKey().name();
+    }
+
+    boolean isFullyLoaded();
+
+    <T extends UserHandler> @Nullable T getNullableHandler(Class<T> handlerClazz);
+
+    default <T extends UserHandler> @NotNull T getHandler(Class<T> handlerClazz) throws NullPointerException {
+        return Objects.requireNonNull(
+                getNullableHandler(handlerClazz),
+                "User '" + getUsername() + "' missing '" + handlerClazz.getSimpleName() + "' ."
+        );
+    }
+
+    default <T extends UserHandler> @NotNull Optional<@Nullable T> getOptionalHandler(Class<T> handlerClazz) {
+        return Optional.ofNullable(getNullableHandler(handlerClazz));
+    }
+
+    boolean containsHandler(Class<? extends UserHandler> handlerClazz);
+
+    <T extends UserHandler> T loadHandler(@NotNull String namespace, @NotNull Class<T> handlerClazz) throws Exception;
+
+    void unloadHandler(Class<? extends UserHandler> handlerClazz) throws Exception;
+
+    @Unmodifiable
+    @NotNull Map<String, Object> getTags();
+
+    boolean containsTag(@NotNull String key);
+
+    boolean removeTag(@NotNull String key);
+
+    boolean setTagValue(@NotNull String key, Object value);
+
+    @Nullable Object getTagValue(@NotNull String key);
+
+    default <V> @Nullable V getTagValue(@NotNull String key, @NotNull Class<V> valueClazz) {
+        return getTagOptional(key, valueClazz).orElse(null);
+    }
+
+    default Optional<@Nullable Object> getTagOptional(@NotNull String key) {
+        return Optional.ofNullable(getTagValue(key));
+    }
+
+    default <V> Optional<@Nullable V> getTagOptional(@NotNull String key, @NotNull Class<V> valueClazz) {
+        return getTagOptional(key).map(valueClazz::cast);
+    }
+
+    @Override
+    default int compareTo(@NotNull User that) {
+        return Long.compare(this.getID(), that.getID());
+    }
+
+}
