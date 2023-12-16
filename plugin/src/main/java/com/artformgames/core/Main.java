@@ -95,6 +95,11 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
     }
 
+    @Override
+    public boolean isDebugging() {
+        return PluginConfig.DEBUG.getNotNull();
+    }
+    
     public static void info(String... messages) {
         getInstance().log(messages);
     }
