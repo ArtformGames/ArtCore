@@ -1,6 +1,9 @@
 package com.artformgames.core.user;
 
+import com.artformgames.core.user.handler.AbstractUserHandler;
 import com.artformgames.core.user.handler.UserHandler;
+import com.artformgames.core.user.handler.UserHandlerLoader;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -43,9 +46,11 @@ public interface User extends Comparable<User> {
 
     boolean containsHandler(Class<? extends UserHandler> handlerClazz);
 
-    <T extends UserHandler> T loadHandler(@NotNull String namespace, @NotNull Class<T> handlerClazz) throws Exception;
+    <T extends AbstractUserHandler> T loadHandler(@NotNull UserHandlerLoader<T> loader) throws Exception;
 
-    void unloadHandler(Class<? extends UserHandler> handlerClazz) throws Exception;
+    <T extends AbstractUserHandler> void unloadHandler(Class<T> handlerClazz) throws Exception;
+
+    <T extends AbstractUserHandler> void unloadHandler(UserHandlerLoader<T> loader) throws Exception;
 
     @Unmodifiable
     @NotNull Map<String, Object> getTags();
@@ -56,10 +61,16 @@ public interface User extends Comparable<User> {
 
     boolean setTagValue(@NotNull String key, Object value);
 
-    @Nullable Object getTagValue(@NotNull String key);
 
-    default <V> @Nullable V getTagValue(@NotNull String key, @NotNull Class<V> valueClazz) {
-        return getTagOptional(key, valueClazz).orElse(null);
+    @Contract("_, !null -> !null")
+    Object getTagValue(@NotNull String key, @Nullable Object defaultValue);
+
+    default @Nullable Object getTagValue(@NotNull String key) {
+        return getTagValue(key, null);
+    }
+
+    default <V> @Nullable V getTagValue(@NotNull String key, @NotNull Class<V> valueClazz, @Nullable V defaultValue) {
+        return getTagOptional(key, valueClazz).orElse(defaultValue);
     }
 
     default Optional<@Nullable Object> getTagOptional(@NotNull String key) {

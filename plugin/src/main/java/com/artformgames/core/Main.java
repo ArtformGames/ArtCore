@@ -8,8 +8,13 @@ import cc.carm.plugin.minesql.MineSQL;
 import com.artformgames.core.conf.PluginConfig;
 import com.artformgames.core.conf.PluginMessages;
 import com.artformgames.core.data.DataTables;
+import com.artformgames.core.function.settings.UserSettingsLoader;
+import com.artformgames.core.listener.UserListener;
+import com.artformgames.core.user.BukkitUserManager;
 import com.artformgames.core.utils.GHUpdateChecker;
 import org.bstats.bukkit.Metrics;
+import org.bukkit.Bukkit;
+import org.jetbrains.annotations.NotNull;
 
 public class Main extends EasyPlugin implements ArtCorePlugin {
 
@@ -20,6 +25,7 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
     }
 
     protected MineConfiguration configuration;
+    protected BukkitUserManager usersManager;
 
     @Override
     protected void load() {
@@ -40,8 +46,10 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
         DataTables.initializeTables(sqlManager);
 
         log("Initialize users manager...");
-        this.usersManager = new UsersManager(this);
-        this.usersManager.loadOnline();
+        this.usersManager = new BukkitUserManager(getLogger());
+        if (!Bukkit.getOnlinePlayers().isEmpty()) {
+            this.usersManager.loadAll();
+        }
 
     }
 
@@ -50,9 +58,13 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
         log("Register listeners...");
         GUI.initialize(this);
+        registerListener(new UserListener());
 
         log("Register commands...");
 
+
+        log("Enable user settings data...");
+        this.usersManager.registerHandler(new UserSettingsLoader(this));
 
         if (PluginConfig.METRICS.getNotNull()) {
             log("Initializing bStats...");
@@ -74,14 +86,10 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
         log("Shutting down UserManager...");
         try {
-            this.usersManager.saveAll();
+            this.usersManager.unloadAll();
         } catch (Exception e) {
             e.printStackTrace();
         }
-        this.usersManager.shutdown();
-
-        log("Shutting down DataManager...");
-        this.dataManager.shutdown();
 
     }
 
@@ -99,6 +107,11 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
     public static Main getInstance() {
         return instance;
+    }
+
+    @Override
+    public @NotNull BukkitUserManager getUserManager() {
+        return null;
     }
 
 }

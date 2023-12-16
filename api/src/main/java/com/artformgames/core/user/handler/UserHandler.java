@@ -12,7 +12,9 @@ public interface UserHandler {
 
     User getUser();
 
-    UserKey getUserKey();
+    default UserKey getUserKey() {
+        return getUser().getKey();
+    }
 
     default UUID getUserUUID() {
         return getUser().getUserUUID();

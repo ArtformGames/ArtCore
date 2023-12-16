@@ -9,8 +9,11 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import java.util.*;
+import java.util.concurrent.ExecutorService;
 
 public interface UserManager<USER extends User> extends UserKeyManager, UserHandlerManager {
+
+    @NotNull ExecutorService getExecutor();
 
     @Unmodifiable
     @NotNull Map<@NotNull UUID, USER> list();
@@ -36,8 +39,6 @@ public interface UserManager<USER extends User> extends UserKeyManager, UserHand
     }
 
     void unload(@NotNull UUID userUUID);
-
-    void remove(@NotNull UUID userUUID);
 
 
 }

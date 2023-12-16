@@ -3,6 +3,7 @@ package com.artformgames.core.data;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.easysql.api.SQLTable;
 import cc.carm.lib.easysql.api.builder.TableCreateBuilder;
+import cc.carm.lib.easysql.api.enums.ForeignKeyRule;
 import cc.carm.lib.easysql.api.enums.IndexType;
 import com.artformgames.core.user.UserKey;
 import org.jetbrains.annotations.NotNull;
@@ -22,6 +23,18 @@ public enum DataTables implements SQLTable {
 
         table.setIndex(IndexType.INDEX, "idx_user_name", UserKey.KeyType.NAME.getColumnName());
         table.setIndex(IndexType.UNIQUE_KEY, "idx_user_uuid", UserKey.KeyType.UUID.getColumnName());
+    }),
+
+    USER_SETTINGS("user_settings", (builder) -> {
+        builder.addColumn("uid", "INT UNSIGNED NOT NULL");
+        builder.addColumn("type", "INT(11) UNSIGNED NOT NULL");
+        builder.addColumn("value", "TEXT");
+        builder.setIndex(IndexType.PRIMARY_KEY, "settings", "uid", "type");
+        builder.addForeignKey(
+                "uid", "fk_u_settings",
+                USERS.getTableName(), "id",
+                ForeignKeyRule.CASCADE, ForeignKeyRule.CASCADE
+        );
     });
 
     private final @Nullable String tableName;
