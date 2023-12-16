@@ -9,6 +9,7 @@ import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
@@ -214,5 +215,13 @@ public class BukkitUserManager implements UserManager<BukkitUser> {
             ex.printStackTrace();
         }
     }
+
+    public void unloadPluginHandler(@NotNull Plugin plugin) {
+        getLogger().info("Unregistering all handlers from #" + plugin.getName() + " ...");
+        Set<UserHandlerLoader<?>> requireRemoved = new HashSet<>();
+        this.handlers.stream().filter(handler -> handler.getPlugin().getName().equals(plugin.getName())).forEach(requireRemoved::add);
+        requireRemoved.forEach(loader -> unregisterHandler(loader.getHandlerClass()));
+    }
+
 
 }

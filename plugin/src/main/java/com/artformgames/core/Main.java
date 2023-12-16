@@ -9,6 +9,7 @@ import com.artformgames.core.conf.PluginConfig;
 import com.artformgames.core.conf.PluginMessages;
 import com.artformgames.core.data.DataTables;
 import com.artformgames.core.function.settings.UserSettingsLoader;
+import com.artformgames.core.listener.PluginListener;
 import com.artformgames.core.listener.UserListener;
 import com.artformgames.core.user.BukkitUserManager;
 import com.artformgames.core.utils.GHUpdateChecker;
@@ -59,6 +60,7 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
         log("Register listeners...");
         GUI.initialize(this);
         registerListener(new UserListener());
+        registerListener(new PluginListener());
 
         log("Register commands...");
 
@@ -111,7 +113,7 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
     @Override
     public @NotNull BukkitUserManager getUserManager() {
-        return null;
+        return this.usersManager;
     }
 
 }
