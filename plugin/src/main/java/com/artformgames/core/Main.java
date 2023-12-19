@@ -4,15 +4,15 @@ import cc.carm.lib.easyplugin.EasyPlugin;
 import cc.carm.lib.easyplugin.gui.GUI;
 import cc.carm.lib.easysql.api.SQLManager;
 import cc.carm.lib.mineconfiguration.bukkit.MineConfiguration;
-import cc.carm.plugin.minesql.MineSQL;
 import com.artformgames.core.conf.PluginConfig;
 import com.artformgames.core.conf.PluginMessages;
-import com.artformgames.core.data.DataTables;
+import com.artformgames.core.data.DataManager;
 import com.artformgames.core.function.settings.UserSettingsLoader;
 import com.artformgames.core.listener.PluginListener;
 import com.artformgames.core.listener.UserListener;
 import com.artformgames.core.user.BukkitUserManager;
 import com.artformgames.core.utils.GHUpdateChecker;
+import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
@@ -26,7 +26,9 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
     }
 
     protected MineConfiguration configuration;
+    protected DataManager dataManager;
     protected BukkitUserManager usersManager;
+    protected BungeeChannelApi bungeeChannel;
 
     @Override
     protected void load() {
@@ -38,35 +40,39 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
 
 
         log("Loading database...");
-        SQLManager sqlManager = MineSQL.getRegistry().get(PluginConfig.DATASOURCE_ID.getNotNull());
-        if (sqlManager == null) {
-            error("Datasource not configured or exists! Please check the configuration!");
+        this.dataManager = new DataManager(getLogger());
+        if (!dataManager.initialize()) {
+            dataManager.shutdown();
             setEnabled(false);
             return;
         }
-        DataTables.initializeTables(sqlManager);
 
-        log("Initialize users manager...");
+        log("Initializing users manager...");
         this.usersManager = new BukkitUserManager(getLogger());
         if (!Bukkit.getOnlinePlayers().isEmpty()) {
             this.usersManager.loadAll();
         }
+
+
+        log("Initializing channels...");
+        this.bungeeChannel = new BungeeChannelApi(this);
 
     }
 
     @Override
     protected boolean initialize() {
 
-        log("Register listeners...");
+        log("Registering listeners...");
         GUI.initialize(this);
         registerListener(new UserListener());
         registerListener(new PluginListener());
 
-        log("Register commands...");
+        log("Registering commands...");
 
 
-        log("Enable user settings data...");
+        log("Enabling user settings data...");
         this.usersManager.registerHandler(new UserSettingsLoader(this));
+
 
         if (PluginConfig.METRICS.getNotNull()) {
             log("Initializing bStats...");
@@ -86,6 +92,9 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
     @Override
     protected void shutdown() {
 
+        log("Close channels...");
+        this.bungeeChannel.unregister();
+
         log("Shutting down UserManager...");
         try {
             this.usersManager.unloadAll();
@@ -93,13 +102,16 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
             e.printStackTrace();
         }
 
+        log("Shutting down DataManager...");
+        this.dataManager.shutdown();
+
     }
 
     @Override
     public boolean isDebugging() {
         return PluginConfig.DEBUG.getNotNull();
     }
-    
+
     public static void info(String... messages) {
         getInstance().log(messages);
     }
@@ -117,8 +129,18 @@ public class Main extends EasyPlugin implements ArtCorePlugin {
     }
 
     @Override
+    public @NotNull SQLManager getSQLManager() {
+        return this.dataManager.getSQLManager();
+    }
+
+    @Override
     public @NotNull BukkitUserManager getUserManager() {
         return this.usersManager;
+    }
+
+    @Override
+    public @NotNull BungeeChannelApi getBungeeAPI() {
+        return this.bungeeChannel;
     }
 
 }

@@ -16,7 +16,7 @@ import java.util.function.Consumer;
 
 public enum DataTables implements SQLTable {
 
-    USERS("users", (table) -> {
+    USERS("users", table -> {
         table.addAutoIncrementColumn(UserKey.KeyType.ID.getColumnName());
         table.addColumn(UserKey.KeyType.UUID.getColumnName(), "CHAR(36) NOT NULL");
         table.addColumn(UserKey.KeyType.NAME.getColumnName(), "VARCHAR(20)");
@@ -25,7 +25,7 @@ public enum DataTables implements SQLTable {
         table.setIndex(IndexType.UNIQUE_KEY, "idx_user_uuid", UserKey.KeyType.UUID.getColumnName());
     }),
 
-    USER_SETTINGS("user_settings", (builder) -> {
+    USER_SETTINGS("user_settings", builder -> {
         builder.addColumn("uid", "INT UNSIGNED NOT NULL");
         builder.addColumn("type", "INT(11) UNSIGNED NOT NULL");
         builder.addColumn("value", "TEXT");

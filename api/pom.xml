@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.artformgames</groupId>
         <artifactId>artcore-parent</artifactId>
-        <version>1.0-SNAPSHOT</version>
+        <version>1.0.0</version>
     </parent>
     <properties>
         <maven.compiler.source>${project.jdk.version}</maven.compiler.source>
@@ -20,9 +20,16 @@
 
     <dependencies>
         <dependency>
-            <groupId>cc.carm.plugin</groupId>
-            <artifactId>minesql-api</artifactId>
-            <version>${deps.minesql.version}</version>
+            <groupId>cc.carm.lib</groupId>
+            <artifactId>easysql-api</artifactId>
+            <version>${deps.easysql.version}</version>
+            <scope>compile</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>de.themoep</groupId>
+            <artifactId>minedown</artifactId>
+            <version>${deps.minedown.version}</version>
             <scope>compile</scope>
         </dependency>
 
@@ -123,7 +130,7 @@
             <version>1.6</version>
             <scope>compile</scope>
         </dependency>
-        
+
     </dependencies>
 
     <build>

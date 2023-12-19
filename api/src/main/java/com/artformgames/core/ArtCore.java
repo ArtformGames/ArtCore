@@ -1,5 +1,6 @@
 package com.artformgames.core;
 
+import cc.carm.lib.easysql.api.SQLManager;
 import com.artformgames.core.user.manager.UserManager;
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
 import org.bukkit.Bukkit;
@@ -24,12 +25,16 @@ public class ArtCore {
         return core;
     }
 
+    public static SQLManager getSQLManager() {
+        return plugin().getSQLManager();
+    }
+
     public static UserManager<?> getUserManager() {
-        throw new UnsupportedOperationException("Not implemented");
+        return plugin().getUserManager();
     }
 
     public static BungeeChannelApi getBungeeAPI() {
-        throw new UnsupportedOperationException("Not implemented");
+        return plugin().getBungeeAPI();
     }
 
 
