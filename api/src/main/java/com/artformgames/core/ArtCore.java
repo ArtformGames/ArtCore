@@ -31,7 +31,7 @@ public class ArtCore {
         return core;
     }
 
-    public LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?> createCommand() {
+    public static LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?> createCommand() {
         return LiteCommandsBukkit.builder().missingPermission(new PermMissedHandler()).invalidUsage(new CommandUsageHandler());
     }
 
