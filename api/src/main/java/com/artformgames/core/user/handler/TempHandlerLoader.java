@@ -10,7 +10,7 @@ import java.util.function.Function;
 
 public class TempHandlerLoader<H extends AbstractUserHandler> extends UserHandlerLoader<H> {
 
-    public <T extends AbstractUserHandler> TempHandlerLoader<T> of(@NotNull Plugin plugin, @NotNull Class<T> handlerClass,
+    public static <T extends AbstractUserHandler> TempHandlerLoader<T> of(@NotNull Plugin plugin, @NotNull Class<T> handlerClass,
                                                                    @NotNull Function<User, T> loader) {
         return new TempHandlerLoader<>(plugin, handlerClass, loader);
     }
