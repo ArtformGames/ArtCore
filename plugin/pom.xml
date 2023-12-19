@@ -27,6 +27,13 @@
         </dependency>
 
         <dependency>
+            <groupId>cc.carm.plugin</groupId>
+            <artifactId>minesql-api</artifactId>
+            <version>${deps.minesql.version}</version>
+            <scope>provided</scope>
+        </dependency>
+
+        <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
             <version>3.0.0</version>

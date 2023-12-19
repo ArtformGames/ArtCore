@@ -123,14 +123,7 @@
             <version>1.6</version>
             <scope>compile</scope>
         </dependency>
-
-        <dependency>
-            <groupId>net.wesjd</groupId>
-            <artifactId>anvilgui</artifactId>
-            <version>1.5.3-SNAPSHOT</version>
-            <scope>compile</scope>
-        </dependency>
-
+        
     </dependencies>
 
     <build>
