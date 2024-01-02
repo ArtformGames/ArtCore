@@ -70,7 +70,7 @@
                         <filter>
                             <artifact>*:*</artifact>
                             <excludes>
-                                <exclude>META-INF/MAN IFEST.MF</exclude>
+                                <exclude>META-INF/MANIFEST.MF</exclude>
                                 <exclude>META-INF/*.txt</exclude>
                             </excludes>
                         </filter>
