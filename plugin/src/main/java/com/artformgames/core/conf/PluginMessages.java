@@ -1,10 +1,11 @@
 package com.artformgames.core.conf;
 
+import cc.carm.lib.configuration.core.Configuration;
 import cc.carm.lib.configuration.core.annotation.ConfigPath;
 
-public class PluginMessages extends MessagesRoot {
+public interface PluginMessages extends Configuration {
 
     @ConfigPath(root = true)
-    public static final Class<?> GENERAL = GeneralMessages.class;
+    Class<?> GENERAL = GeneralMessages.class;
 
 }

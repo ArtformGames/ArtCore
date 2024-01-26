@@ -1,6 +1,6 @@
 package com.artformgames.core.conf;
 
-import cc.carm.lib.configuration.core.ConfigurationRoot;
+import cc.carm.lib.configuration.core.Configuration;
 import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageListBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.builder.message.CraftMessageValueBuilder;
 import cc.carm.lib.mineconfiguration.bukkit.builder.title.TitleConfigBuilder;
@@ -16,19 +16,19 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.BiFunction;
 
-public abstract class MessagesRoot extends ConfigurationRoot {
+public interface Messages extends Configuration {
 
-    protected static @NotNull CraftMessageListBuilder<BaseComponent[]> list() {
+    static @NotNull CraftMessageListBuilder<BaseComponent[]> list() {
         return ConfiguredMessageList.create(getParser())
                 .whenSend((sender, message) -> message.forEach(m -> sender.spigot().sendMessage(m)));
     }
 
-    protected static @NotNull CraftMessageValueBuilder<BaseComponent[]> value() {
+    static @NotNull CraftMessageValueBuilder<BaseComponent[]> value() {
         return ConfiguredMessage.create(getParser())
                 .whenSend((sender, message) -> sender.spigot().sendMessage(message));
     }
 
-    protected static @NotNull TitleConfigBuilder title() {
+    static @NotNull TitleConfigBuilder title() {
         return ConfiguredTitle.create();
     }
 

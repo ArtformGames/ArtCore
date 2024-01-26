@@ -7,6 +7,7 @@ import com.artformgames.core.user.User;
 import com.artformgames.core.user.handler.UserHandler;
 import com.artformgames.core.user.manager.UserManager;
 import dev.rollczi.litecommands.LiteCommandsBuilder;
+import dev.rollczi.litecommands.bukkit.LiteBukkitFactory;
 import dev.rollczi.litecommands.bukkit.LiteBukkitSettings;
 import dev.rollczi.litecommands.bukkit.LiteCommandsBukkit;
 import io.github.leonardosnt.bungeechannelapi.BungeeChannelApi;
@@ -36,7 +37,7 @@ public class ArtCore {
     }
 
     public static LiteCommandsBuilder<CommandSender, LiteBukkitSettings, ?> createCommand() {
-        return LiteCommandsBukkit.builder().missingPermission(new PermMissedHandler()).invalidUsage(new CommandUsageHandler());
+        return LiteBukkitFactory.builder().missingPermission(new PermMissedHandler()).invalidUsage(new CommandUsageHandler());
     }
 
     public static SQLManager getSQLManager() {

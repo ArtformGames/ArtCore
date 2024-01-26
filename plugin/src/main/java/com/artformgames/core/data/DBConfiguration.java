@@ -10,8 +10,8 @@ public class DBConfiguration extends ConfigurationRoot {
 
     @ConfigPath("driver")
     @HeaderComment({
-            "数据库驱动配置，请根据数据库类型设置。",
-            "默认为MySQL: com.mysql.cj.jdbc.Driver",
+            "The database driver based on the database type.",
+            "default is MySQL: com.mysql.cj.jdbc.Driver",
     })
     protected static final ConfigValue<String> DRIVER_NAME = ConfiguredValue.of(
             String.class, "com.mysql.cj.jdbc.Driver"
