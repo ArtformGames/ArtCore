@@ -1,5 +1,6 @@
 package com.artformgames.core.user;
 
+import cc.carm.lib.easysql.api.SQLQuery;
 import com.artformgames.core.data.DataTables;
 import com.artformgames.core.user.handler.AbstractUserHandler;
 import com.artformgames.core.user.handler.UserHandler;
@@ -16,6 +17,7 @@ import org.jetbrains.annotations.Unmodifiable;
 import panda.std.function.ThrowingConsumer;
 
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
@@ -129,8 +131,46 @@ public class BukkitUserManager implements UserManager<BukkitUser> {
         return users;
     }
 
+    public Long upsertID(@NotNull UUID uuid, @NotNull String username) throws Exception {
+        long id = -1;
+        String cachedName = null;
+
+        try (SQLQuery query = DataTables.USERS.createQuery()
+                .addCondition(UserKey.KeyType.UUID.getColumnName(), uuid)
+                .setLimit(1).build().execute()) {
+            ResultSet resultSet = query.getResultSet();
+            if (resultSet != null && resultSet.next()) {
+                id = resultSet.getInt(UserKey.KeyType.ID.getColumnName());
+                cachedName = resultSet.getString(UserKey.KeyType.NAME.getColumnName());
+            }
+        } catch (SQLException ignore) {
+        }
+
+        if (id > 0) {
+            if (cachedName == null || !cachedName.equals(username)) {
+                DataTables.USERS.createUpdate()
+                        .addColumnValue(UserKey.KeyType.NAME.getColumnName(), username)
+                        .addCondition("id", id)
+                        .build().execute((e, a) -> {
+                            getLogger().severe("更新用户 " + username + " 的用户名失败！");
+                            e.printStackTrace();
+                        });
+            }
+            return id;
+        } else {
+            try {
+                return DataTables.USERS.createInsert()
+                        .setColumnNames(UserKey.KeyType.UUID.getColumnName(), UserKey.KeyType.NAME.getColumnName())
+                        .setParams(uuid, username).returnGeneratedKey(Long.class).execute();
+            } catch (SQLException e) {
+                getLogger().severe("创建新用户 " + username + " 失败！");
+                return null;
+            }
+        }
+    }
+
     public BukkitUser createUser(@NotNull UUID userUUID, @NotNull String username) throws Exception {
-        Long id = getID(userUUID);
+        Long id = upsertID(userUUID, username);
         if (id == null || id <= 0) throw new Exception("无法获取用户 " + username + " 的UID！");
         return new BukkitUser(this, new UserKey(id, userUUID, username));
     }
