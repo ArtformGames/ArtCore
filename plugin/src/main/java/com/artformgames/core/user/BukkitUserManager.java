@@ -131,6 +131,12 @@ public class BukkitUserManager implements UserManager<BukkitUser> {
         return users;
     }
 
+    public UserKey upsertKey(@NotNull UUID uuid, @NotNull String username) throws Exception {
+        Long id = upsertID(uuid, username);
+        if (id == null || id <= 0) throw new Exception("Unable to get " + username + "'s uid.");
+        return new UserKey(id, uuid, username);
+    }
+
     public Long upsertID(@NotNull UUID uuid, @NotNull String username) throws Exception {
         long id = -1;
         String cachedName = null;
@@ -152,7 +158,7 @@ public class BukkitUserManager implements UserManager<BukkitUser> {
                         .addColumnValue(UserKey.KeyType.NAME.getColumnName(), username)
                         .addCondition("id", id)
                         .build().execute((e, a) -> {
-                            getLogger().severe("更新用户 " + username + " 的用户名失败！");
+                            getLogger().severe("Failed to update " + username + "'s username!");
                             e.printStackTrace();
                         });
             }
@@ -163,16 +169,16 @@ public class BukkitUserManager implements UserManager<BukkitUser> {
                         .setColumnNames(UserKey.KeyType.UUID.getColumnName(), UserKey.KeyType.NAME.getColumnName())
                         .setParams(uuid, username).returnGeneratedKey(Long.class).execute();
             } catch (SQLException e) {
-                getLogger().severe("创建新用户 " + username + " 失败！");
+                getLogger().severe("Failed to create " + username + "'s account!");
                 return null;
             }
         }
     }
 
     public BukkitUser createUser(@NotNull UUID userUUID, @NotNull String username) throws Exception {
-        Long id = upsertID(userUUID, username);
-        if (id == null || id <= 0) throw new Exception("无法获取用户 " + username + " 的UID！");
-        return new BukkitUser(this, new UserKey(id, userUUID, username));
+        UserKey key = upsertKey(userUUID, username);
+        if (key == null) throw new Exception("Unable to fetch " + username + "'s key.");
+        return new BukkitUser(this, key);
     }
 
     @NotNull

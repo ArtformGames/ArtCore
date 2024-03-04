@@ -15,6 +15,10 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.Optional;
+import java.util.UUID;
 
 public class ArtCore {
 
@@ -54,6 +58,13 @@ public class ArtCore {
     public static <T extends UserHandler> @NotNull T getHandler(@NotNull Player player,
                                                                 @NotNull Class<T> handler) {
         return getUser(player).getHandler(handler);
+    }
+
+    public static <T extends UserHandler> @Nullable T getHandler(@NotNull UUID playerUUID,
+                                                                 @NotNull Class<T> handler) {
+        return Optional.ofNullable(getUserManager().get(playerUUID))
+                .map(user -> user.getNullableHandler(handler))
+                .orElse(null);
     }
 
     public static BungeeChannelApi getBungeeAPI() {

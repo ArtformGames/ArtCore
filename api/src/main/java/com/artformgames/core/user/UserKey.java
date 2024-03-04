@@ -32,12 +32,6 @@ public record UserKey(
         };
     }
 
-    public Map<String, String> toMap() {
-        String jsonValue = GSON.toJson(this);
-        return Arrays.stream(KeyType.values())
-                .collect(Collectors.toMap(this::getValue, value -> jsonValue, (a, b) -> b));
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

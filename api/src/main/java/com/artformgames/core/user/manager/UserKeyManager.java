@@ -9,6 +9,7 @@ import java.util.UUID;
 
 public interface UserKeyManager {
 
+    UserKey upsertKey(@NotNull UUID userUUID, @NotNull String username) throws Exception;
 
     @Nullable UserKey getKey(UserKey.KeyType type, Object param);
 
