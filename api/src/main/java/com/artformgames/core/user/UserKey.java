@@ -1,20 +1,14 @@
 package com.artformgames.core.user;
 
-import com.google.gson.Gson;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Arrays;
-import java.util.Map;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 public record UserKey(
         long id, @NotNull UUID uuid,
         @NotNull String name
 ) {
-
-    private static final Gson GSON = new Gson();
 
     public String getValue(KeyType keyType) {
         return switch (keyType) {
