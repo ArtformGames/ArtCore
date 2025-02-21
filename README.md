@@ -22,9 +22,9 @@ The source code of this project adopts the [GNU General Public License v3.0](htt
 
 This project is mainly developed by the [Artfrom Games](https://github.com/ArtformGames/) .
 
-<img src="https://raw.githubusercontent.com/ArtformGames/.github/master/logo/logo_full.png" width="30%"  height="30%" alt="ArtformGames Logo">
+<img src="https://raw.githubusercontent.com/ArtformGames/.github/master/logo/logo_full.svg" width="317px" height="117px" alt="ArtformGames">
 
 Many thanks to Jetbrains for kindly providing a license for us to work on this and other open-source projects.  
 
-[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/ArtformGames/VotePass)
+[![](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)](https://www.jetbrains.com/?from=https://github.com/ArtformGames/ArtCore)
 
