@@ -19,7 +19,7 @@
 
         <deps.easysql.version>0.4.7</deps.easysql.version>
         <deps.easyplugin.version>1.5.12</deps.easyplugin.version>
-        <deps.mineconfig.version>2.9.3</deps.mineconfig.version>
+        <deps.mineconfig.version>3.0.0</deps.mineconfig.version>
         <deps.minedown.version>1.7.1-SNAPSHOT</deps.minedown.version>
         <deps.easylistener.version>2.0.1</deps.easylistener.version>
         <deps.jsonserializer.version>1.0.2</deps.jsonserializer.version>
